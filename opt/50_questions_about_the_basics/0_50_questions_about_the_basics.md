@@ -1,0 +1,52 @@
+# AtCoder 最速で緑になる 基礎・典型50問詳細解説
+1. 入力と出力 ABC205 A Dif:6 
+2. 条件分岐1 ABC219 A Dif:6 
+3. 関数 ABC234 A Dif:7 
+4. for文 ABC204 B Dif:9 
+5. 文字列操作 ABC232 A Dif:9 
+6. 文字コード変換 ABC218 B Dif:14 
+7. リスト操作 ABC241 A Dif:15 
+8. set ABC240 B Dif:19 
+9. 図形 ABC246 A Dif:28 
+10. 二次元配列、ソート1 ABC201 B Dif:32 
+11. 二重ループ ABC234 B Dif:46 
+12. 条件分岐2 ABC205 C Dif:63 
+13. 周期性 ABC220 C Dif:119 
+14. 逆順操作 ABC216 C Dif:145 
+15. 貪欲法 ABC229 C Dif:165 
+16. インタラクティブ ABC244 C Dif:165 
+17. 連想配列1 ABC206 C Dif:171 
+18. itertools ABC215 C Dif:178 
+19. 二分探索1 ABC231 C Dif:194 
+20. ソート2 ABC209 C Dif:285
+21. シミュレーション1 ABC214 C Dif:319 
+22. bit全探索 ABC221 C Dif:379 
+23. 区間の処理 ABC207 C Dif:397 
+24. 座標圧縮 ABC213 C Dif:481 
+25. heap ABC234 D Dif:503 
+26. deque ABC237 D Dif:544 
+27. DP1 ABC211 C Dif:559 
+28. 全探索2 ABC233 C Dif:604 
+29. BFS1 ABC204 C Dif:629 
+30. 規則性利用 ABC238 C Dif:637 
+31. 全探索3 ABC227 C Dif:692 
+32. DFS1 ABC213 D Dif:710 
+33. 連想配列2 ABC218 D Dif:715 
+34. UnionFind1 ATC B 
+35. UnionFind2 ABC231 D Dif:726 
+36. 尺取法1、区間和 ABC229 D Dif:745 
+37. BFS2 ABC211 D Dif:755 
+38. シミュレーション2 ABC243 D Dif:758 
+39. DP2 ABC248 C Dif:787 
+40. 二分探索2 ABC248 D Dif:793 
+41. 尺取法2、エラトステネスの篩 ABC250 D Dif:797
+42. FenwickTree ACL B 
+43. 想定解multiset ABC217 D Dif:802 
+44. DP3 ABC204 D Dif:832 
+45. 区間スケジューリング ABC230 D Dif:963 
+46. UnionFind3 ABC218 E Dif:1004 
+47. DFS2 ABC239 E Dif:1084 
+48. DP4 ABC219 D Dif:1085 
+49. 二分探索3 ABC246 D Dif:1148 
+50. ワーシャルフロイド法 ABC208 D Dif:1190
+
