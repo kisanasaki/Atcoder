@@ -1,0 +1,133 @@
+import os
+from collections import defaultdict
+import sys
+
+# 線分交差判定と閉路検出
+def sign(x): return 1 if x > 0 else -1 if x < 0 else 0
+def orientation(a, b, c):
+    cross = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+    return sign(cross)
+
+def segments_intersect(p1, p2, q1, q2):
+    if (max(p1[0], p2[0]) < min(q1[0], q2[0]) or
+        max(q1[0], q2[0]) < min(p1[0], p2[0]) or
+        max(p1[1], p2[1]) < min(q1[1], q2[1]) or
+        max(q1[1], q2[1]) < min(p1[1], p2[1])):
+        return False
+    o1, o2 = orientation(p1, p2, q1), orientation(p1, p2, q2)
+    o3, o4 = orientation(q1, q2, p1), orientation(q1, q2, p2)
+    return (o1 * o2 <= 0) and (o3 * o4 <= 0)
+
+def has_cycle(graph, node, visited, rec_stack):
+    visited[node], rec_stack[node] = True, True
+    for neighbor in graph[node]:
+        if not visited[neighbor] and has_cycle(graph, neighbor, visited, rec_stack):
+            return True
+        elif rec_stack[neighbor]:
+            return True
+    rec_stack[node] = False
+    return False
+
+# 処理本体（入出力は引数で受け取る）
+def process_single_instance(N, M, K, processor_positions, sorter_positions, prob):
+    inlet = (0, 5000)
+    nodes = [inlet] + processor_positions + sorter_positions
+    total_nodes = 1 + N + M
+
+    edges = []
+    graph = defaultdict(list)
+
+    def can_add_edge(a, b):
+        for u, v in edges:
+            if segments_intersect(nodes[a], nodes[b], nodes[u], nodes[v]):
+                return False
+        graph[a].append(b)
+        if has_cycle(graph, a, [False]*total_nodes, [False]*total_nodes):
+            graph[a].pop()
+            return False
+        return True
+
+    # ごみ種固定
+    proc_assign = ' '.join(str(i) for i in range(N))
+
+    # inlet → 最も近い sorter
+    dist = [((x - inlet[0])**2 + (y - inlet[1])**2, i) for i, (x, y) in enumerate(sorter_positions)]
+    _, nearest_sorter_idx = min(dist)
+    inlet_conn = N + 1 + nearest_sorter_idx
+    edges.append((0, inlet_conn))
+    graph[0].append(inlet_conn)
+
+    # sorter 設定（最大・最小）
+    sorter_assigns = []
+    for i in range(M):
+        if i < K:
+            p = prob[i]
+            imax = p.index(max(p))
+            imin = p.index(min(p))
+            sorter_assigns.append(f"{i} {imax} {imin}")
+        else:
+            sorter_assigns.append("-1")
+
+    # sorter → processor 接続（imax/iminへ）
+    for i in range(M):
+        if i >= K:
+            continue
+        from_node = N + 1 + i
+        row = prob[i]
+        imax, imin = row.index(max(row)), row.index(min(row))
+        out1, out2 = 1 + imax, 1 + imin
+        for to_node in [out1, out2]:
+            if can_add_edge(from_node, to_node):
+                edges.append((from_node, to_node))
+
+    return proc_assign, inlet_conn, sorter_assigns
+
+# 標準入力 or ファイルでの入力処理切り替え
+def main():
+    BATCH_MODE = True  # ← False で標準入力＆標準出力
+
+    if BATCH_MODE:
+        input_dir = "input"
+        output_dir = "output"
+        os.makedirs(output_dir, exist_ok=True)
+
+        for i in range(100):
+            name = f"{i:04}.txt"
+            input_path = os.path.join(input_dir, name)
+            output_path = os.path.join(output_dir, name)
+
+            if not os.path.exists(input_path):
+                print(f"⚠️ {input_path} が見つかりません")
+                continue
+
+            with open(input_path, 'r') as f:
+                lines = f.readlines()
+            N, M, K = map(int, lines[0].split())
+            processor_positions = [tuple(map(int, lines[j+1].split())) for j in range(N)]
+            sorter_positions = [tuple(map(int, lines[N+1+j].split())) for j in range(M)]
+            prob = [list(map(float, lines[N+1+M+j].split())) for j in range(K)]
+
+            proc_assign, inlet_conn, sorter_assigns = process_single_instance(N, M, K, processor_positions, sorter_positions, prob)
+
+            with open(output_path, 'w') as out_f:
+                out_f.write(proc_assign + '\n')
+                out_f.write(str(inlet_conn) + '\n')
+                out_f.write('\n'.join(sorter_assigns) + '\n')
+            print(f"✅ {output_path} 完了")
+    
+    else:
+        # --- 標準入力から読み取り、標準出力に書き出し ---
+        input = sys.stdin.readline
+        N, M, K = map(int, input().split())
+        processor_positions = [tuple(map(int, input().split())) for _ in range(N)]
+        sorter_positions = [tuple(map(int, input().split())) for _ in range(M)]
+        prob = [list(map(float, input().split())) for _ in range(K)]
+
+        proc_assign, inlet_conn, sorter_assigns = process_single_instance(N, M, K, processor_positions, sorter_positions, prob)
+
+        print(proc_assign)
+        print(inlet_conn)
+        print('\n'.join(sorter_assigns))
+
+if __name__ == "__main__":
+    main()
