@@ -1,0 +1,1 @@
+python ABCXXXA.py < input.txt
